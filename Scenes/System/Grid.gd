@@ -1,11 +1,13 @@
 extends Node2D
 
+signal game_over
 signal enemy_action_ended
 
 const TILE_SCENE = preload("res://Scenes/Objects/Tile.tscn")
 const PLAYER_SCENE = preload("res://Scenes/Objects/Player.tscn")
 const ENEMY_SCENE = preload("res://Scenes/Objects/Enemy_Virus.tscn")
-const CENTER = Vector2(240, 35)
+
+var center = Vector2(240, 35)
 
 enum {PLAYER_PHASE, ENEMY_PHASE}
 var current_phase = PLAYER_PHASE
@@ -19,14 +21,16 @@ var game_world := []
 var grid_width = 8
 var grid_height = 8
 var units = {}
+var enemy_spawn_tiles = []
 
+var tutorial = false
 var active := true setget _active_setter
 
 onready var tiles_node = $Tiles
 onready var units_node = $Units
 
 func _ready():
-	initialize_grid(16,16)
+	pass
 
 func _active_setter(value):
 	active = value
@@ -35,22 +39,32 @@ func initialize_grid(width, height):
 	grid_width = width
 	grid_height = height
 	
+	var new_tile
 	for x in grid_width:
 		game_world.append([])
 		for y in grid_height:
-			var new_tile = TILE_SCENE.instance()
+			new_tile = TILE_SCENE.instance()
 			new_tile._grid = self
 			new_tile.position = coords_to_map(Vector2(x,y))
 			new_tile.index = to_index(x, y)
 			new_tile.location = Vector2(x,y)
+			if !tutorial:
+				if !in_player_bounds(x,y):
+					new_tile.enemy_spawn = true
+					enemy_spawn_tiles.append(new_tile)
+			
 			
 			tiles_node.add_child(new_tile)
 			game_world[x].append(new_tile)
 			#yield(get_tree().create_timer(0.03), "timeout")
 			
+	if is_instance_valid(new_tile):
+		yield(new_tile._anim_player, "animation_finished")
+			
 	initialize_player(Vector2(width/2-1, height/2-1))
-	spawn_enemy(Vector2(0,0))
-	spawn_enemy(Vector2(10,10))
+	if !tutorial:
+		try_spawn_enemy()
+		try_spawn_enemy()
 			
 func initialize_player(pos):
 	player = PLAYER_SCENE.instance()
@@ -73,7 +87,7 @@ func spawn_enemy(pos):
 	
 #to-do
 func _on_Player_death():
-	pass
+	emit_signal("game_over")
 	
 func _on_Death(tile):
 	units.erase(tile)
@@ -82,9 +96,14 @@ func _on_Death(tile):
 #------------------------------------------------------------------
 func in_bounds(x, y):
 	if (x >= 0) and (x < grid_width) and (y >= 0) and (y < grid_height):
-		if is_instance_valid(game_world[x][y]):
-			return true
+		return true
 	return false
+	
+func in_player_bounds(x,y):
+	if (x >= 1) and (x < grid_width-1) and (y >= 1) and (y < grid_height-1):
+		return true
+	return false
+	
 	
 func to_index(x, y):
 	return ((grid_height*x) + y)
@@ -93,10 +112,10 @@ func to_coords(index):
 	return Vector2(index / grid_height, index % grid_height)
 	
 func coords_to_map(v: Vector2):
-	return (14 * Vector2(v.x - v.y, (v.x+v.y)/2.0) +CENTER)
+	return (14 * Vector2(v.x - v.y, (v.x+v.y)/2.0) +center)
 	
 func map_to_coords(v: Vector2):
-	var _v = (v - CENTER) / 14
+	var _v = (v - center) / 14
 	return Vector2((_v.x/2) + _v.y, _v.y - (_v.x/2))
 	
 func is_occupied(tile):
@@ -126,7 +145,28 @@ func end_phase():
 		handle_enemy_phase()
 	else:
 		current_phase = PLAYER_PHASE
+		if check_surrounded():
+			emit_signal("game_over")
 		active = true
+		
+func check_surrounded():
+	var location = player.grid_location
+	var tile_locations = [location + Vector2(1,0), location + Vector2(0,1), location + Vector2(-1,0), location + Vector2(0,-1)]
+	for pos in tile_locations:
+		if in_player_bounds(pos.x, pos.y):
+			return false
+		if !is_occupied(game_world[pos.x][pos.y]):
+			return false
+	
+	return true
+	
+func try_spawn_enemy():
+	var rand = randi() % enemy_spawn_tiles.size()
+	var spawn_tile = enemy_spawn_tiles[rand]
+	if is_occupied(spawn_tile):
+		try_spawn_enemy()
+	else:
+		spawn_enemy(spawn_tile.location)
 	
 func handle_enemy_phase():
 	var _enemy
@@ -146,6 +186,9 @@ func handle_enemy_phase():
 		var decision = _decisionmaker.make_decision(tile)
 		execute_enemy_decision(decision[0], decision[1], decision[2], movable_tiles)
 		#yield(self, "enemy_action_ended")
+		
+	if !tutorial:
+		try_spawn_enemy()
 		
 	if is_instance_valid(_enemy):
 		yield(_enemy, "action_ended")
@@ -329,7 +372,7 @@ func check_available_tile(current_tile, direction):
 		Global.DIRECTIONS.SW:
 			v += Vector2(0,1)
 			
-	if !in_bounds(v.x, v.y):
+	if !in_player_bounds(v.x, v.y):
 		return false
 		
 	if is_occupied(game_world[v.x][v.y]):

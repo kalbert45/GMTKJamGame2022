@@ -2,6 +2,8 @@ extends Node2D
 
 signal attack_finished
 
+var enemy_spawn = false
+
 var index
 var location = Vector2.ZERO
 var _grid
@@ -10,7 +12,8 @@ onready var _anim_player = $AnimationPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	if enemy_spawn:
+		$Sprite.texture = load("res://Assets/Sprites/enemy_spawn_tile.png")
 
 
 func attacked():
