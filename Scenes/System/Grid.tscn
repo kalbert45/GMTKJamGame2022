@@ -9,3 +9,4 @@ script = ExtResource( 1 )
 [node name="Tiles" type="YSort" parent="."]
 
 [node name="Units" type="YSort" parent="."]
+z_index = 2

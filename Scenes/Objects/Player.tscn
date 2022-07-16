@@ -45,14 +45,14 @@ viewport_path = NodePath("Viewport")
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 28 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 37 ), ExtResource( 33 ) ],
-"loop": false,
-"name": "nw_walk",
-"speed": 12.0
-}, {
 "frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 17 ), ExtResource( 19 ), ExtResource( 11 ), ExtResource( 18 ), ExtResource( 9 ), ExtResource( 22 ), ExtResource( 10 ) ],
 "loop": false,
 "name": "sw_walk",
+"speed": 12.0
+}, {
+"frames": [ ExtResource( 28 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 37 ), ExtResource( 33 ) ],
+"loop": false,
+"name": "nw_walk",
 "speed": 12.0
 }, {
 "frames": [ ExtResource( 1 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 8 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 27 ), ExtResource( 24 ) ],
@@ -66,7 +66,7 @@ animations = [ {
 "speed": 12.0
 } ]
 
-[node name="Player" type="Node2D"]
+[node name="Player" type="Node2D" groups=["Units"]]
 script = ExtResource( 38 )
 
 [node name="Viewport" type="Viewport" parent="."]

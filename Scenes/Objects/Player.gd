@@ -1,5 +1,7 @@
 extends Node2D
 
+signal player_death
+signal attacked_finished
 signal move_ended(number, direction)
 
 onready var dice_scene = $Viewport/Dice_Scene
@@ -7,12 +9,12 @@ onready var player_sprite = $Player_Sprite
 onready var _tween = $Tween
 
 const ATTACK_PATTERNS = {
-	ONE = [],
-	TWO = [],
-	THREE = [],
-	FOUR = [],
-	FIVE = [],
-	SIX = []
+	ONE = [Vector2(1,0), Vector2(2,0), Vector2(0,1), Vector2(0,2), Vector2(-1,0), Vector2(-2,0), Vector2(0,-1), Vector2(0,-2)],
+	TWO = [Vector2(1,0), Vector2(1,1), Vector2(2,2), Vector2(3,3), Vector2(1,-1), Vector2(2,-2), Vector2(3,-3)],
+	THREE = [Vector2(0,1), Vector2(0,2), Vector2(0,3), Vector2(0,4), Vector2(0,-1), Vector2(0,-2), Vector2(0,-3), Vector2(0,-4)],
+	FOUR = [Vector2(1,1), Vector2(2,2), Vector2(1,-1), Vector2(2,-2), Vector2(-1,1), Vector2(-2,2), Vector2(-1,-1), Vector2(-2,-2)],
+	FIVE = [Vector2(2,1), Vector2(1,2), Vector2(-1,2), Vector2(-2,1), Vector2(-2,-1), Vector2(-1,-2), Vector2(1,-2), Vector2(2,-1)],
+	SIX = [Vector2(-1,0), Vector2(-2,0), Vector2(0,1), Vector2(-1,1), Vector2(-2,1), Vector2(0,-1), Vector2(-1,-1), Vector2(-2,-1)]
 }
 
 var _grid
@@ -23,6 +25,12 @@ var walking = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_tween.connect("tween_all_completed", self, "_on_walk_end")
+
+func receive_hit(enemy, _power):
+	print("player hit received")
+	
+func die():
+	emit_signal("player_death")
 
 # whether the tile is available or not is the grids job
 func walk_to(direction, target_tile):
@@ -48,15 +56,14 @@ func walk_to(direction, target_tile):
 	grid_location = tile.location
 	
 	var face_value = yield(dice_scene, "turn_finished")
-	print(face_value)
-	print(grid_location)
-	attack(face_value, direction)
+
+	#attack(face_value, direction)
 	emit_signal("move_ended", face_value, direction)
 	
-func attack(face_value, direction):
+#func attack(face_value, direction):
 	
 	
-	yield()
+#	yield()
 
 func _on_walk_end():
 	pass

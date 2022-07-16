@@ -8,6 +8,22 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Decisionmaker",
+"language": "GDScript",
+"path": "res://Scenes/System/Decisionmaker.gd"
+}, {
+"base": "Reference",
+"class": "Pathfinder",
+"language": "GDScript",
+"path": "res://Scenes/System/Pathfinder.gd"
+} ]
+_global_script_class_icons={
+"Decisionmaker": "",
+"Pathfinder": ""
+}
+
 [application]
 
 config/name="GMTKJamGame"

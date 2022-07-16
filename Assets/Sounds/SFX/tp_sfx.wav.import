@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/tp_sfx.wav-6bb369656d62a6d4e014a95966645197.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/SFX/tp_sfx.wav"
+dest_files=[ "res://.import/tp_sfx.wav-6bb369656d62a6d4e014a95966645197.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
