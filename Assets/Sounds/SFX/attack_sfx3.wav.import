@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/attack_sfx3.wav-d86fdc118c6f129387d33f2fe632c1ce.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/SFX/attack_sfx3.wav"
+dest_files=[ "res://.import/attack_sfx3.wav-d86fdc118c6f129387d33f2fe632c1ce.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

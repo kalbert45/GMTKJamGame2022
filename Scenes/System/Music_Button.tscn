@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Sprites/music_button.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/System/Music_Button.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Sprites/music_button_pressed.png" type="Texture" id=3]
+
+[node name="Music_Button" type="TextureButton"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1772.0
+margin_top = 938.0
+margin_right = -116.0
+margin_bottom = -110.0
+rect_scale = Vector2( 4, 4 )
+focus_mode = 0
+toggle_mode = true
+shortcut_in_tooltip = false
+enabled_focus_mode = 0
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 3 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="toggled" from="." to="." method="_on_Music_Button_toggled"]

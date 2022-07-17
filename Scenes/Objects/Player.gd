@@ -1,6 +1,7 @@
 extends Node2D
 
 signal player_death
+signal lose_life
 signal attacked_finished
 signal move_ended(number, direction)
 
@@ -14,7 +15,7 @@ onready var despawn_sfx = $Despawn_SFX
 
 const ATTACK_PATTERNS = {
 	ONE = [Vector2(1,0), Vector2(2,0), Vector2(0,1), Vector2(0,2), Vector2(-1,0), Vector2(-2,0), Vector2(0,-1), Vector2(0,-2)],
-	TWO = [Vector2(1,0), Vector2(1,1), Vector2(2,2), Vector2(2,0), Vector2(1,-1), Vector2(2,-2), Vector2(2,-1), Vector2(2,1)],
+	TWO = [Vector2(1,0), Vector2(1,1), Vector2(1,2),Vector2(2,2), Vector2(2,0), Vector2(1,-1), Vector2(1,-2),Vector2(2,-2), Vector2(2,-1), Vector2(2,1)],
 	THREE = [Vector2(0,1), Vector2(0,2), Vector2(0,3), Vector2(0,4), Vector2(0,-1), Vector2(0,-2), Vector2(0,-3), Vector2(0,-4)],
 	FOUR = [Vector2(1,1), Vector2(2,2), Vector2(1,-1), Vector2(2,-2), Vector2(-1,1), Vector2(-2,2), Vector2(-1,-1), Vector2(-2,-2)],
 	FIVE = [Vector2(2,1), Vector2(1,2), Vector2(-1,2), Vector2(-2,1), Vector2(-2,-1), Vector2(-1,-2), Vector2(1,-2), Vector2(2,-1)],
@@ -35,6 +36,7 @@ func _ready():
 func receive_hit(_enemy, _power):
 	hit_sfx.play()
 	_anim_player.play("Take_damage")
+	emit_signal("lose_life")
 	lives -= 1
 	if lives <= 0:
 		die()

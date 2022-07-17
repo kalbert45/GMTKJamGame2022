@@ -7,9 +7,10 @@ const GRID_SCENE = preload("res://Scenes/System/Grid.tscn")
 var _grid
 
 func _ready():
+	Bgm.muffle()
 	_grid = GRID_SCENE.instance()
 	_grid.tutorial = true
-	_grid.center = Vector2(240, 70)
+	_grid.center = Vector2(130, 70)
 	add_child(_grid)
 	_grid.initialize_grid(8,8)
 
@@ -20,4 +21,5 @@ func _ready():
 
 
 func _on_TextureButton_pressed():
+	Bgm.unmuffle()
 	emit_signal("end_tutorial")

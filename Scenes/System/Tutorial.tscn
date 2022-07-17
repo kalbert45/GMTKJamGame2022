@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scenes/System/Tutorial.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Sprites/tutorial_S.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Assets/Sprites/tutorial_A.png" type="Texture" id=4]
 [ext_resource path="res://Assets/Sprites/tutorial_D.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Themes/Button_theme.tres" type="Theme" id=6]
+[ext_resource path="res://Assets/Sprites/tutorial.png" type="Texture" id=7]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Load"
@@ -241,7 +242,8 @@ __meta__ = {
 }
 
 [node name="Tutorial_images" type="Control" parent="."]
-margin_right = 40.0
+margin_left = -440.0
+margin_right = -400.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -290,5 +292,10 @@ texture = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 1460, 495 )
+scale = Vector2( 4, 4 )
+texture = ExtResource( 7 )
 
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]

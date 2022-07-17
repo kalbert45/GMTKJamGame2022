@@ -1,11 +1,19 @@
 extends Node2D
 
-signal game_over
-signal enemy_action_ended
+signal surrounded_game_over
+signal update_score
+signal grid_initialized
 
 const TILE_SCENE = preload("res://Scenes/Objects/Tile.tscn")
 const PLAYER_SCENE = preload("res://Scenes/Objects/Player.tscn")
 const ENEMY_SCENE = preload("res://Scenes/Objects/Enemy_Virus.tscn")
+
+const ATTACK_SFX1 = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+const ATTACK_SFX2 = preload("res://Assets/Sounds/SFX/attack_sfx2.wav")
+const ATTACK_SFX3 = preload("res://Assets/Sounds/SFX/attack_sfx3.wav")
+const ATTACK_SFX4 = preload("res://Assets/Sounds/SFX/attack_sfx4.wav")
+const ATTACK_SFX5 = preload("res://Assets/Sounds/SFX/attack_sfx5.wav")
+const ATTACK_SFX6 = preload("res://Assets/Sounds/SFX/attack_sfx6.wav")
 
 var center = Vector2(240, 35)
 
@@ -28,6 +36,8 @@ var active := true setget _active_setter
 
 onready var tiles_node = $Tiles
 onready var units_node = $Units
+onready var move_sfx = $Move_SFX
+onready var attack_sfx = $Attack_SFX
 
 func _ready():
 	pass
@@ -65,6 +75,8 @@ func initialize_grid(width, height):
 	if !tutorial:
 		try_spawn_enemy()
 		try_spawn_enemy()
+		
+	emit_signal("grid_initialized")
 			
 func initialize_player(pos):
 	player = PLAYER_SCENE.instance()
@@ -87,10 +99,12 @@ func spawn_enemy(pos):
 	
 #to-do
 func _on_Player_death():
-	emit_signal("game_over")
+	pass
+	#emit_signal("game_over")
 	
 func _on_Death(tile):
 	units.erase(tile)
+	emit_signal("update_score")
 	
 # QOL grid functions
 #------------------------------------------------------------------
@@ -146,7 +160,7 @@ func end_phase():
 	else:
 		current_phase = PLAYER_PHASE
 		if check_surrounded():
-			emit_signal("game_over")
+			emit_signal("surrounded_game_over")
 		active = true
 		
 func check_surrounded():
@@ -154,13 +168,13 @@ func check_surrounded():
 	var tile_locations = [location + Vector2(1,0), location + Vector2(0,1), location + Vector2(-1,0), location + Vector2(0,-1)]
 	for pos in tile_locations:
 		if in_player_bounds(pos.x, pos.y):
-			return false
-		if !is_occupied(game_world[pos.x][pos.y]):
-			return false
+			if !is_occupied(game_world[pos.x][pos.y]):
+				return false
 	
 	return true
 	
 func try_spawn_enemy():
+	randomize()
 	var rand = randi() % enemy_spawn_tiles.size()
 	var spawn_tile = enemy_spawn_tiles[rand]
 	if is_occupied(spawn_tile):
@@ -308,6 +322,7 @@ func move_player(direction):
 			target_tile_location += Vector2(0,1)
 	player.walk_to(direction, game_world[target_tile_location.x][target_tile_location.y])
 	var attack = yield(player, "move_ended")
+	#move_sfx.play()
 	process_attack(attack)
 	
 	
@@ -319,16 +334,22 @@ func process_attack(attack):
 	match face_value:
 		1:
 			attack_pattern = player.ATTACK_PATTERNS.ONE
+			attack_sfx.stream = ATTACK_SFX1
 		2:
 			attack_pattern = player.ATTACK_PATTERNS.TWO
+			attack_sfx.stream = ATTACK_SFX2
 		3:
 			attack_pattern = player.ATTACK_PATTERNS.THREE
+			attack_sfx.stream = ATTACK_SFX3
 		4:
 			attack_pattern = player.ATTACK_PATTERNS.FOUR
+			attack_sfx.stream = ATTACK_SFX4
 		5:
 			attack_pattern = player.ATTACK_PATTERNS.FIVE
+			attack_sfx.stream = ATTACK_SFX5
 		6:
 			attack_pattern = player.ATTACK_PATTERNS.SIX
+			attack_sfx.stream = ATTACK_SFX6
 			
 	var new_pattern = []
 	match direction:
@@ -352,10 +373,11 @@ func process_attack(attack):
 		if !in_bounds(j.x, j.y):
 			continue
 		_tile = game_world[j.x][j.y]
-		_tile.attacked()
+		_tile.attacked(face_value)
 		#yield(_tile, "attack_finished")
-	
-	yield(get_tree().create_timer(0.2), "timeout")
+	yield(get_tree().create_timer(0.1), "timeout")
+	attack_sfx.play()
+	yield(get_tree().create_timer(0.1), "timeout")
 	#if is_instance_valid(_tile):
 	#	yield(_tile, "attack_finished")
 	end_phase()
@@ -372,7 +394,7 @@ func check_available_tile(current_tile, direction):
 		Global.DIRECTIONS.SW:
 			v += Vector2(0,1)
 			
-	if !in_player_bounds(v.x, v.y):
+	if enemy_spawn_tiles.has(game_world[v.x][v.y]):
 		return false
 		
 	if is_occupied(game_world[v.x][v.y]):

@@ -16,8 +16,26 @@ func _ready():
 		$Sprite.texture = load("res://Assets/Sprites/enemy_spawn_tile.png")
 
 
-func attacked():
-	_anim_player.play("attacked_one")
+func attacked(face_value):
+	if position.y > _grid.player.position.y:
+		z_index = 2
+	else:
+		z_index = 0
+	match face_value:
+		1:
+			_anim_player.play("attacked_one")
+		2:
+			_anim_player.play("attacked_two")
+		3:
+			_anim_player.play("attacked_three")
+		4:
+			_anim_player.play("attacked_four")
+		5:
+			_anim_player.play("attacked_five")
+		6:
+			_anim_player.play("attacked_six")
+	yield(_anim_player, "animation_finished")
+	z_index = -1
 
 func damage_unit():
 	var _enemy
@@ -28,5 +46,5 @@ func damage_unit():
 		
 	#if is_instance_valid(_enemy):
 	#	yield(_enemy, "attacked_finished")
-		
+	#z_index = 0
 	emit_signal("attack_finished")

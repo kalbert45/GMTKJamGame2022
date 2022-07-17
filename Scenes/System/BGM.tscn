@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Sounds/Music/8BIT_to_8_Beat_BGM_DOVA-SYNDRO__getmp3.pro_.ogg" type="AudioStream" id=1]
+[ext_resource path="res://Scenes/System/BGM.gd" type="Script" id=2]
+
+[node name="BGM" type="AudioStreamPlayer"]
+stream = ExtResource( 1 )
+volume_db = -16.0
+autoplay = true
+bus = "Music"
+script = ExtResource( 2 )
+
+[node name="Tween" type="Tween" parent="."]

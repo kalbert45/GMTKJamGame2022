@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/8bit_2_BGM_DOVA-SY__getmp3.pro_.ogg-d9f31fa4768486efd8c4a8964ecd4aca.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Music/8bit_2_BGM_DOVA-SY__getmp3.pro_.ogg"
+dest_files=[ "res://.import/8bit_2_BGM_DOVA-SY__getmp3.pro_.ogg-d9f31fa4768486efd8c4a8964ecd4aca.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
