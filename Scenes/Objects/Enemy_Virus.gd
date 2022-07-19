@@ -147,6 +147,7 @@ func receive_hit():
 	emit_signal("attacked_finished")
 	
 func die():
+	grid.units.erase(tile)
 	dead = true
 	yield(get_tree(), "idle_frame")
 	

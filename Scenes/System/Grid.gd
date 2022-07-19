@@ -103,7 +103,7 @@ func _on_Player_death():
 	#emit_signal("game_over")
 	
 func _on_Death(tile):
-	units.erase(tile)
+	#units.erase(tile)
 	emit_signal("update_score")
 	
 # QOL grid functions

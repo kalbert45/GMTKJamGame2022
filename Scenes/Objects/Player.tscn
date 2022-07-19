@@ -53,11 +53,6 @@ animations = [ {
 "name": "sw_walk",
 "speed": 12.0
 }, {
-"frames": [ ExtResource( 28 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 37 ), ExtResource( 33 ) ],
-"loop": false,
-"name": "nw_walk",
-"speed": 12.0
-}, {
 "frames": [ ExtResource( 1 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 8 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 27 ), ExtResource( 24 ) ],
 "loop": false,
 "name": "ne_walk",
@@ -66,6 +61,11 @@ animations = [ {
 "frames": [ ExtResource( 34 ), ExtResource( 35 ), ExtResource( 36 ), ExtResource( 23 ), ExtResource( 20 ), ExtResource( 14 ), ExtResource( 16 ), ExtResource( 21 ), ExtResource( 15 ) ],
 "loop": false,
 "name": "se_walk",
+"speed": 12.0
+}, {
+"frames": [ ExtResource( 28 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 37 ), ExtResource( 33 ) ],
+"loop": false,
+"name": "nw_walk",
 "speed": 12.0
 } ]
 
@@ -242,8 +242,8 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"points": PoolRealArray( 1e-05, -0.25, 0, 0.25, 0, 0.05, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.5 )
+"points": PoolRealArray( 1e-05, -0.25, 0, 0.25, 0, 0.05, -0.25, 0, 0.25, 0, 0.05, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.5, 0.8 )
 }
 tracks/4/type = "bezier"
 tracks/4/path = NodePath("Viewport_Sprite:scale:y")
@@ -252,8 +252,8 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"points": PoolRealArray( 1e-05, -0.25, 0, 0.25, 0, 0.05, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.5 )
+"points": PoolRealArray( 1e-05, -0.25, 0, 0.25, 0, 0.05, -0.25, 0, 0.25, 0, 0.05, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.5, 0.8 )
 }
 tracks/5/type = "bezier"
 tracks/5/path = NodePath("Player_Sprite:position:x")
