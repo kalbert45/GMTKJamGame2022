@@ -18,15 +18,15 @@ func turn(direction):
 	#print(cube.global_transform)
 	match direction:
 		Global.DIRECTIONS.NE:
-			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(1,0,0), deg2rad(-90)), 0.75,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(1,0,0), deg2rad(-90)), Bgm.beat_length * 2 / 3,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 		Global.DIRECTIONS.NW:
-			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(0,0,1), deg2rad(90)), 0.75,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(0,0,1), deg2rad(90)), Bgm.beat_length * 2 / 3,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 
 		Global.DIRECTIONS.SW:
-			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(1,0,0), deg2rad(90)), 0.75,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(1,0,0), deg2rad(90)), Bgm.beat_length * 2 / 3,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 
 		Global.DIRECTIONS.SE:
-			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(0,0,1), deg2rad(-90)), 0.75,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+			tween.interpolate_property(cube, "global_transform", cube.global_transform, cube.global_transform.rotated(Vector3(0,0,1), deg2rad(-90)), Bgm.beat_length * 2 / 3,Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 
 		
 	tween.start()

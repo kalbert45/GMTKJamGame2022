@@ -11,5 +11,5 @@ dest_files=[ "res://.import/8BIT_to_8_Beat_BGM_DOVA-SYNDRO__getmp3.pro_.ogg-f8a4
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

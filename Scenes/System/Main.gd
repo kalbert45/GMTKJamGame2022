@@ -33,4 +33,5 @@ func _on_Tutorial_end():
 	game = GAME_SCENE.instance()
 	add_child(game)
 	
-
+func _process(delta):
+	$RichTextLabel.text = str(Bgm.song_position_beats)

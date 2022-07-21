@@ -1,7 +1,15 @@
 extends Node2D
 
+# NOTES: For rhythm game, need to initiate enemy phase much earlier, end player movement much faster. x
+# combo multiplier for score 
+# dancing guy, more colors and feedback
+# scrolling beat tracker
+# more enemy variety
+# attacks larger and flashier with combo
+# fix tutorial, add helper menu
+
 signal surrounded_game_over
-signal update_score
+signal update_score(multiplier)
 signal grid_initialized
 
 const TILE_SCENE = preload("res://Scenes/Objects/Tile.tscn")
@@ -22,9 +30,15 @@ var current_phase = PLAYER_PHASE
 
 var player
 
+# rhythm game variables
+var combo := 0 setget _combo_setter
+var combo_multiplier = 0
+
+# enemy ai variables
 var _decisionmaker: Decisionmaker
 var _pathfinder: Pathfinder
 
+# grid info
 var game_world := []
 var grid_width = 8
 var grid_height = 8
@@ -40,10 +54,19 @@ onready var move_sfx = $Move_SFX
 onready var attack_sfx = $Attack_SFX
 
 func _ready():
-	pass
+	Bgm.connect("combo_break", self, "_on_Combo_break")
 
 func _active_setter(value):
 	active = value
+	
+func _combo_setter(value):
+	combo = value
+	combo_multiplier = floor(((value / 10) + 1)/2)*2
+	#print(combo_multiplier)
+	# combo multiplier x1 below 10
+	# x2 after 10
+	# x4 after 30
+	# x8 after 70
 	
 func initialize_grid(width, height):
 	grid_width = width
@@ -104,7 +127,7 @@ func _on_Player_death():
 	
 func _on_Death(tile):
 	#units.erase(tile)
-	emit_signal("update_score")
+	emit_signal("update_score", combo_multiplier)
 	
 # QOL grid functions
 #------------------------------------------------------------------
@@ -153,15 +176,15 @@ func nearest_tile(v: Vector2):
 #----------------------------------------------------------------------
 # phase/combat handlers
 	
-func end_phase():
-	if current_phase == PLAYER_PHASE:
-		current_phase = ENEMY_PHASE
-		handle_enemy_phase()
-	else:
-		current_phase = PLAYER_PHASE
-		if check_surrounded():
-			emit_signal("surrounded_game_over")
-		active = true
+#func end_phase():
+#	if current_phase == PLAYER_PHASE:
+#		current_phase = ENEMY_PHASE
+#		handle_enemy_phase()
+#	else:
+#		current_phase = PLAYER_PHASE
+#		if check_surrounded():
+#			emit_signal("surrounded_game_over")
+#		active = true
 		
 func check_surrounded():
 	var location = player.grid_location
@@ -207,7 +230,8 @@ func handle_enemy_phase():
 	if is_instance_valid(_enemy):
 		yield(_enemy, "action_ended")
 		
-	end_phase()
+	if check_surrounded():
+		emit_signal("surrounded_game_over")
 		
 func execute_enemy_decision(action, from_tile, to_tile, movable_tiles):
 	match action:
@@ -289,6 +313,7 @@ func _flood_fill(start_tile, move_mode_tiles, stack, speed):
 # on button press, check if player can move to that location, then move and calculate attack
 # wait for everything to be over, then initiate enemy phase
 func _unhandled_input(event):
+
 	if !active:
 		return
 		
@@ -310,6 +335,8 @@ func _unhandled_input(event):
 			move_player(Global.DIRECTIONS.SE)
 
 func move_player(direction):
+	check_beat()
+	
 	var target_tile_location = player.tile.location
 	match direction:
 		Global.DIRECTIONS.NW:
@@ -321,10 +348,33 @@ func move_player(direction):
 		Global.DIRECTIONS.SW:
 			target_tile_location += Vector2(0,1)
 	player.walk_to(direction, game_world[target_tile_location.x][target_tile_location.y])
+
 	var attack = yield(player, "move_ended")
 	#move_sfx.play()
 	process_attack(attack)
 	
+func check_beat():
+	var closest_beat = Bgm.closest_beat()
+	var time_off = closest_beat[1]
+
+	if time_off <= 0.022:
+		self.combo += 1
+		print("Perfect")
+	elif time_off <= 0.043:
+		self.combo += 1
+		print("Excellent")
+	elif time_off <= 0.102:
+		self.combo += 1
+		print("Great")
+	elif time_off <= 0.135:
+		_on_Combo_break()
+		print("Decent")
+	else:
+		_on_Combo_break()
+		print("Miss")
+	
+func _on_Combo_break():
+	self.combo = 0
 	
 func process_attack(attack):
 	var face_value = attack[0]
@@ -375,12 +425,17 @@ func process_attack(attack):
 		_tile = game_world[j.x][j.y]
 		_tile.attacked(face_value)
 		#yield(_tile, "attack_finished")
-	yield(get_tree().create_timer(0.1), "timeout")
+	yield(get_tree().create_timer(Bgm.beat_length / 3), "timeout")
 	attack_sfx.play()
+	#yield(get_tree(), "idle_frame")
+	# process enemy movements
+	handle_enemy_phase()
+	
 	yield(get_tree().create_timer(0.1), "timeout")
 	#if is_instance_valid(_tile):
 	#	yield(_tile, "attack_finished")
-	end_phase()
+	active = true
+	#end_phase()
 	
 func check_available_tile(current_tile, direction):
 	var v = current_tile.location
@@ -394,14 +449,18 @@ func check_available_tile(current_tile, direction):
 		Global.DIRECTIONS.SW:
 			v += Vector2(0,1)
 			
+		
+	if !in_bounds(v.x, v.y):
+		return false
+			
 	if enemy_spawn_tiles.has(game_world[v.x][v.y]):
 		return false
+
 		
 	if is_occupied(game_world[v.x][v.y]):
 		return false
 		
 	return true
-	
 	
 	
 	

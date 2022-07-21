@@ -7,7 +7,7 @@ signal death(tile)
 #export var max_health = 100.0
 #export var health = 100.0
 export var power = 50
-export var speed = 2
+export var speed = 1
 export var move_speed = 150
 
 var dead = false
@@ -189,7 +189,8 @@ func _set_is_walking(value):
 	else: _sprite.set_idle()
 	
 func _begin_walk():
-	var time = (0.25 * (curve.get_point_count()-1)) + 0.05
+	var time = Bgm.beat_length / 3
+	#(0.25 * (curve.get_point_count()-1)) + 0.05
 	_tween.interpolate_property(_path_follow, "unit_offset", 0, 1, time, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	_tween.start()
 	

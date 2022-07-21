@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://Assets/Animations/Player/ne_walk/ne_walk0061.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/3D/Dice_Scene.tscn" type="PackedScene" id=2]
@@ -42,6 +42,12 @@
 [ext_resource path="res://Assets/Sounds/SFX/tp_sfx.wav" type="AudioStream" id=40]
 [ext_resource path="res://Assets/Sounds/SFX/hit_sfx.wav" type="AudioStream" id=41]
 [ext_resource path="res://Assets/Sounds/SFX/tp_out_sfx.wav" type="AudioStream" id=42]
+[ext_resource path="res://Assets/Sounds/SFX/dice_move_sfx.wav" type="AudioStream" id=43]
+
+[sub_resource type="Shader" id=6]
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 6 )
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
@@ -51,22 +57,22 @@ animations = [ {
 "frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 17 ), ExtResource( 19 ), ExtResource( 11 ), ExtResource( 18 ), ExtResource( 9 ), ExtResource( 22 ), ExtResource( 10 ) ],
 "loop": false,
 "name": "sw_walk",
-"speed": 12.0
+"speed": 24.0
 }, {
 "frames": [ ExtResource( 1 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 8 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 27 ), ExtResource( 24 ) ],
 "loop": false,
 "name": "ne_walk",
-"speed": 12.0
+"speed": 24.0
 }, {
 "frames": [ ExtResource( 34 ), ExtResource( 35 ), ExtResource( 36 ), ExtResource( 23 ), ExtResource( 20 ), ExtResource( 14 ), ExtResource( 16 ), ExtResource( 21 ), ExtResource( 15 ) ],
 "loop": false,
 "name": "se_walk",
-"speed": 12.0
+"speed": 24.0
 }, {
 "frames": [ ExtResource( 28 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 37 ), ExtResource( 33 ) ],
 "loop": false,
 "name": "nw_walk",
-"speed": 12.0
+"speed": 24.0
 } ]
 
 [sub_resource type="Animation" id=3]
@@ -352,6 +358,7 @@ msaa = 2
 [node name="Dice_Scene" parent="Viewport" instance=ExtResource( 2 )]
 
 [node name="Viewport_Sprite" type="Sprite" parent="."]
+material = SubResource( 7 )
 position = Vector2( 0, -6.5 )
 rotation = 3.14159
 scale = Vector2( 0.05, 0.05 )
@@ -380,3 +387,7 @@ stream = ExtResource( 40 )
 
 [node name="Despawn_SFX" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 42 )
+
+[node name="Dice_Move_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 43 )
+volume_db = -6.0

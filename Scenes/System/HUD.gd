@@ -23,8 +23,8 @@ func set_score_text(num):
 	score_text.text = str(num)
 	score_text.rect_size = score_text.get_font("normal_font").get_string_size(score_text.text)
 	
-func update_score():
-	self.score = score + 1
+func update_score(multiplier):
+	self.score = score + multiplier
 	
 func lose_life():
 	match lives:

@@ -11,6 +11,7 @@ onready var image_node = $Image_node
 onready var tween = $Tween
 onready var _anim_player = $AnimationPlayer
 onready var click_sfx = $Click_SFX
+onready var combo_tracker = $RichTextLabel
 
 func _ready():
 	$Game_over_screen/Button.connect("pressed", self, "reset")
@@ -18,7 +19,7 @@ func _ready():
 	
 	_grid = GRID_SCENE.instance()
 	add_child(_grid)
-	_grid.initialize_grid(16,16)
+	_grid.initialize_grid(12,12)
 	yield(_grid, "grid_initialized")
 	_grid.player.connect("lose_life", self, "_on_Lose_life")
 	_grid.connect("surrounded_game_over", self, "_on_Game_over")
@@ -27,11 +28,11 @@ func _ready():
 func _on_Lose_life():
 	hud.lose_life()
 
-func _on_Update_score():
-	hud.update_score()
+func _on_Update_score(multiplier):
+	hud.update_score(multiplier)
 
 func _on_Game_over():
-	Bgm.stop()
+	Bgm.stream_paused = true
 	yield(get_tree().create_timer(0.5), "timeout")
 	hud.visible = false
 	#image_node.global_position = _grid.player.global_position
@@ -46,6 +47,8 @@ func _on_Game_over():
 	
 	
 func reset():
+	Bgm.stream_paused = false
+	Bgm.last_reported_beat = 0
 	Bgm.play()
 	click_sfx.play()
 	for node in image_node.get_children():
@@ -56,8 +59,12 @@ func reset():
 	
 	_grid = GRID_SCENE.instance()
 	add_child(_grid)
-	_grid.initialize_grid(16,16)
+	_grid.initialize_grid(12,12)
 	yield(_grid, "grid_initialized")
 	_grid.player.connect("lose_life", self, "_on_Lose_life")
 	_grid.connect("surrounded_game_over", self, "_on_Game_over")
 	_grid.connect("update_score", self, "_on_Update_score")
+
+func _process(delta):
+	if is_instance_valid(_grid):
+		combo_tracker.text = str(_grid.combo)

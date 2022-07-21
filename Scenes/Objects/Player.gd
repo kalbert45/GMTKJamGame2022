@@ -12,6 +12,7 @@ onready var _tween = $Tween
 onready var hit_sfx = $Hit_SFX
 onready var spawn_sfx = $Spawn_SFX
 onready var despawn_sfx = $Despawn_SFX
+onready var dice_move_sfx = $Dice_Move_SFX
 
 const ATTACK_PATTERNS = {
 	ONE = [Vector2(1,0), Vector2(2,0), Vector2(0,1), Vector2(0,2), Vector2(-1,0), Vector2(-2,0), Vector2(0,-1), Vector2(0,-2)],
@@ -46,8 +47,9 @@ func die():
 
 # whether the tile is available or not is the grids job
 func walk_to(direction, target_tile):
+	dice_move_sfx.play()
 	walking = true
-	_tween.interpolate_property(self, "position", position, target_tile.position, 0.75, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+	_tween.interpolate_property(self, "position", position, target_tile.position, Bgm.beat_length * 2 / 3, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	_tween.start()
 	
 	match direction:
@@ -66,7 +68,6 @@ func walk_to(direction, target_tile):
 	_grid.units[target_tile] = self
 	tile = target_tile
 	grid_location = tile.location
-	
 	var face_value = yield(dice_scene, "turn_finished")
 
 	#attack(face_value, direction)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scenes/System/Game.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Fonts/m5x7.ttf" type="DynamicFontData" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Scenes/System/Game_over_screen.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Sounds/SFX/rollover2.wav" type="AudioStream" id=6]
 [ext_resource path="res://Scenes/Objects/Life.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/System/Beat_tracker.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=2]
 size = 96
@@ -20,12 +21,16 @@ font_data = ExtResource( 2 )
 script = ExtResource( 1 )
 
 [node name="HUD" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1920.0
+margin_bottom = 1080.0
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Beat_tracker" parent="HUD" instance=ExtResource( 8 )]
 
 [node name="Life_Container" type="HBoxContainer" parent="HUD"]
 margin_left = 36.0
@@ -111,3 +116,13 @@ scale = Vector2( 4, 4 )
 
 [node name="Click_SFX" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 1639.0
+margin_top = 174.0
+margin_right = 1679.0
+margin_bottom = 214.0
+rect_scale = Vector2( 4, 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

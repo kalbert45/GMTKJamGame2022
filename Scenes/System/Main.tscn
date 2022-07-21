@@ -29,3 +29,11 @@ margin_bottom = 1080.0
 stream = ExtResource( 2 )
 
 [node name="Control" parent="." instance=ExtResource( 5 )]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_scale = Vector2( 4, 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
